@@ -165,6 +165,15 @@ list "greylisted_ips" addr { \
 }
 <% } -%>
 
+<% unless empty($greyasns) { -%>
+list "greylisted_asn_subnets" addr { \
+<% $greyasns.each |String $ip| { -%>
+  <%= $ip%> \
+<% } -%>
+}
+<% } -%>
+
+
 
 <% unless empty($whlips) { -%>
 list "whitelisted_ips" addr { \
@@ -204,13 +213,16 @@ racl continue from /.*/ addheader "X-Greylist: inspected by %V for IP:'%i' DOMAI
 
 # And here is the access list
 racl whitelist default
-<% unless empty($greyips) { -%>
-dacl greylist list "greylisted_ips"
-<% } -%>
 dacl whitelist list "my network"
 dacl whitelist list "broken mta"
 <% unless empty($whlips) { -%>
 dacl whitelist list "whitelisted_ips"
+<% } -%>
+<% unless empty($greyips) { -%>
+dacl greylist list "greylisted_ips"
+<% } -%>
+<% unless empty($greyasns) { -%>
+dacl greylist list "greylisted_asn_subnets"
 <% } -%>
 <% unless empty($whlcountries) { -%>
 dacl whitelist list "whitelisted_countries"

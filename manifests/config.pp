@@ -8,6 +8,7 @@ class milter_greylist::config (
   Array[String] $whlips,
   Array[String] $greyips,
   Array[String] $greyasns,
+  String $asncsvfile,
   String $mynetworks,
   String $greylistdelay,
   String $autowhiteperiod,
@@ -15,6 +16,13 @@ class milter_greylist::config (
   Boolean $spfwhitelist,
   String $user,
 ){
+  if $greyasns != [] {
+    $emulation_greyasns = milter_greylist::asn2subnets($greyasns,$asncsvfile)
+  }
+  else {
+    $emulation_greyasns = []
+  }
+
   file {'/etc/mail/greylist.conf':
       ensure  => present,
       content => epp('milter_greylist/greylist.conf.epp', {
@@ -23,7 +31,7 @@ class milter_greylist::config (
         'mxpeers'          => $mxpeers,
         'whlcountries'     => $whlcountries,
         'greyips'          => $greyips,
-        'greyasns'         => $greyasns,
+        'greyasns'         => $emulation_greyasns,
         'mynetworks'       => $mynetworks,
         'greylistdelay'    => $greylistdelay,
         'autowhiteperiod'  => $autowhiteperiod,

@@ -39,6 +39,8 @@
 #  Provides a list of IP addresses/subnets you wish to force into a greylist
 # @param greyasns
 #  Provides a list of ASNs you wish to exclude from a greylist
+# @param asncsvfile
+#  If present - path to CSV file with ASN information from MaxMind
 # @param mynetworks
 #  Your own network, which should not suffer greylisting. It is a string.
 # @param greylistdelay
@@ -59,6 +61,7 @@ class milter_greylist (
   Array[String] $whlips       = [],
   Array[String] $greyips      = [],
   Array[String] $greyasns     = [],
+  String $asncsvfile          = '',
   String $mynetworks          = '127.0.0.1/8 10.0.0.0/8',
   String $greylistdelay       = '1h',
   String $autowhiteperiod     = '3d',
@@ -76,6 +79,7 @@ class milter_greylist (
     whlips           => $whlips,
     greyips          => $greyips,
     greyasns         => $greyasns,
+    asncsvfile       => $asncsvfile,
     mynetworks       => $mynetworks,
     greylistdelay    => $greylistdelay,
     autowhiteperiod  => $autowhiteperiod,
