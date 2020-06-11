@@ -18,17 +18,18 @@ describe 'milter_greylist::config' do
       let(:params) do
         {
           'geoipcountryfile' => '/usr/local/share/GeoIP/GeoIP.dat',
-          'socketpath' => 'inet:3333@127.0.0.1',
-          'mxpeers' => ['192.168.1.10', '192.168.1.11', '192.168.1.12'],
-          'whlcountries' => ['US', 'CA'],
-          'whlips' => [],
-          'greyips' => ['15.15.15.15', '14.13.12.11'],
-          'mynetworks' => '127.0.0.1/8 10.0.0.0/8',
-          'greylistdelay' => '1h',
-          'autowhiteperiod' => '3d',
-          'subnetmatchv4' => '/24',
-          'spfwhitelist' => false,
-          'user' => 'grmilter',
+          'socketpath'       => 'inet:3333@127.0.0.1',
+          'mxpeers'          => ['192.168.1.10', '192.168.1.11', '192.168.1.12'],
+          'whlcountries'     => ['US', 'CA'],
+          'whlips'           => [],
+          'greyips'          => ['15.15.15.15', '14.13.12.11'],
+          'greyasns'         => [],
+          'mynetworks'       => '127.0.0.1/8 10.0.0.0/8',
+          'greylistdelay'    => '1h',
+          'autowhiteperiod'  => '3d',
+          'subnetmatchv4'    => '/24',
+          'spfwhitelist'     => false,
+          'user'             => 'grmilter',
         }
       end
 

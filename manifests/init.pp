@@ -34,7 +34,11 @@
 # @param whlcountries
 #  Provides a list of country codes you wish to exclude from a greylist
 # @param whlips
-#  Provides a list of IP addresses you wish to exclude from a greylist
+#  Provides a list of IP addresses/subnets you wish to exclude from a greylist
+# @param greyips 
+#  Provides a list of IP addresses/subnets you wish to force into a greylist
+# @param greyasns
+#  Provides a list of ASNs you wish to exclude from a greylist
 # @param mynetworks
 #  Your own network, which should not suffer greylisting. It is a string.
 # @param greylistdelay
