@@ -10,6 +10,10 @@
 * [`milter_greylist::package`](#milter_greylistpackage): Installs milter-greylist package
 * [`milter_greylist::service`](#milter_greylistservice): Ensure service is running
 
+**Functions**
+
+* [`milter_greylist::asn2subnets`](#milter_greylistasn2subnets): Translates a list of ASNs into a list of subnets
+
 ## Classes
 
 ### milter_greylist
@@ -56,6 +60,16 @@ class milter_greylist {
 }
 ```
 
+##### If you have registered for a free MaxMind account and downloaded CSV file with ASN information you can greylist by ASN number
+
+```puppet
+include milter_greylist
+class milter_greylist {
+  asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
+  greyasns   => ['12220','15555','1333'],
+}
+```
+
 #### Parameters
 
 The following parameters are available in the `milter_greylist` class.
@@ -96,9 +110,33 @@ Default value: ['US','CA']
 
 Data type: `Array[String]`
 
-Provides a list of IP addresses you wish to exclude from a greylist
+Provides a list of IP addresses/subnets you wish to exclude from a greylist
 
 Default value: []
+
+##### `greyips`
+
+Data type: `Array[String]`
+
+Provides a list of IP addresses/subnets you wish to force into a greylist
+
+Default value: []
+
+##### `greyasns`
+
+Data type: `Array[String]`
+
+Provides a list of ASNs you wish to exclude from a greylist
+
+Default value: []
+
+##### `asncsvfile`
+
+Data type: `String`
+
+If present - path to CSV file with ASN information from MaxMind
+
+Default value: ''
 
 ##### `mynetworks`
 
@@ -186,6 +224,24 @@ Data type: `Array[String]`
 
 
 
+##### `greyips`
+
+Data type: `Array[String]`
+
+
+
+##### `greyasns`
+
+Data type: `Array[String]`
+
+
+
+##### `asncsvfile`
+
+Data type: `String`
+
+
+
 ##### `mynetworks`
 
 Data type: `String`
@@ -229,4 +285,46 @@ Installs milter-greylist package
 ### milter_greylist::service
 
 Ensure service is running
+
+## Functions
+
+### milter_greylist::asn2subnets
+
+Type: Ruby 4.x API
+
+Translates a list of ASNs into a list of subnets
+
+#### Examples
+
+##### milter_greylist::asn2subnets(['12200','36248']) => ["146.177.20.0/23", "166.86.4.0/22", "208.95.156.0/22"]
+
+```puppet
+
+```
+
+#### `milter_greylist::asn2subnets(Array $asns, String $asnfile)`
+
+Translates a list of ASNs into a list of subnets
+
+Returns: `Array` Returns a list of subnets
+
+##### Examples
+
+###### milter_greylist::asn2subnets(['12200','36248']) => ["146.177.20.0/23", "166.86.4.0/22", "208.95.156.0/22"]
+
+```puppet
+
+```
+
+##### `asns`
+
+Data type: `Array`
+
+List of ASNs
+
+##### `asnfile`
+
+Data type: `String`
+
+path to asn csv file
 

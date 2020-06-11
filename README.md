@@ -63,6 +63,15 @@ class milter_greylist {
 }
 ```
 
+If you have registered for a free MaxMind account and downloaded CSV file with ASN information you can greylist by ASN number
+```
+include milter_greylist
+class milter_greylist {
+  asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
+  greyasns   => ['12220','15555','1333'],
+}
+```
+
 ## Limitations
 
 If your MTA is Postfix then unless you set smtpd_delay_open_until_valid_rcpt = no in Postfix's main.cf, you won;t get queue id logged

@@ -24,6 +24,13 @@
 #  class milter_greylist {
 #    socket => '/var/run/milter-greylist/milter-greylist.sock',
 #  }
+# 
+# @example If you have registered for a free MaxMind account and downloaded CSV file with ASN information you can greylist by ASN number
+#  include milter_greylist
+#  class milter_greylist {
+#    asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
+#    greyasns   => ['12220','15555','1333'],
+#  }
 #
 # @param geoipcountryfile
 #  Specifies the location of GeoIP database
