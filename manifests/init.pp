@@ -48,16 +48,18 @@
 # @param user
 # Run milter-greylist(8) as a non root user
 class milter_greylist (
-  String $geoipcountryfile = '/usr/local/share/GeoIP/GeoIP.dat',
-  String $socketpath = 'inet:3333@127.0.0.1',
-  Array[String] $mxpeers = [],
+  String $geoipcountryfile    = '/usr/local/share/GeoIP/GeoIP.dat',
+  String $socketpath          = 'inet:3333@127.0.0.1',
+  Array[String] $mxpeers      = [],
   Array[String] $whlcountries = ['US','CA'],
-  Array[String] $whlips = [],
-  String $mynetworks = '127.0.0.1/8 10.0.0.0/8',
-  String $greylistdelay = '1h',
-  String $autowhiteperiod = '3d',
-  String $subnetmatchv4 = '/24',
-  Boolean $spfwhitelist = false,
+  Array[String] $whlips       = [],
+  Array[String] $greyips      = [],
+  Array[String] $greyasns     = [],
+  String $mynetworks          = '127.0.0.1/8 10.0.0.0/8',
+  String $greylistdelay       = '1h',
+  String $autowhiteperiod     = '3d',
+  String $subnetmatchv4       = '/24',
+  Boolean $spfwhitelist       = false,
   String $user = 'grmilter',
 ) {
   include 'milter_greylist::package'
@@ -68,6 +70,8 @@ class milter_greylist (
     mxpeers          => $mxpeers,
     whlcountries     => $whlcountries,
     whlips           => $whlips,
+    greyips          => $greyips,
+    greyasns         => $greyasns,
     mynetworks       => $mynetworks,
     greylistdelay    => $greylistdelay,
     autowhiteperiod  => $autowhiteperiod,
