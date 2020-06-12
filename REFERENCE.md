@@ -36,7 +36,7 @@ include milter_greylist
 
 ```puppet
 include milter_greylist
-class milter_greylist {
+class {'milter_greylist':
   mynetworks => '10.0.0.0/8 192.168.0.0/22 127.0.0.1/8',
 }
 ```
@@ -45,7 +45,7 @@ class milter_greylist {
 
 ```puppet
 include milter_greylist
-class milter_greylist {
+class {'milter_greylist':
   whlcountries => ['CA'],
     whlips => ['8.8.8.8', '8.8.4.4'],
 }
@@ -55,7 +55,7 @@ class milter_greylist {
 
 ```puppet
 include milter_greylist
-class milter_greylist {
+class {'milter_greylist':
   socket => '/var/run/milter-greylist/milter-greylist.sock',
 }
 ```
@@ -64,7 +64,7 @@ class milter_greylist {
 
 ```puppet
 include milter_greylist
-class milter_greylist {
+class {'milter_greylist':
   asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
   greyasns   => ['12220','15555','1333'],
 }

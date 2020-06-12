@@ -8,26 +8,26 @@
 #  include milter_greylist
 # @example To add more IP subnets into mynetworks whitelist
 #  include milter_greylist
-#  class milter_greylist {
+#  class {'milter_greylist':
 #    mynetworks => '10.0.0.0/8 192.168.0.0/22 127.0.0.1/8',
 #  }
 #
 # @example It is advisable to set certain whitelisted IP addresses or countries to avoid getting into initial delay trouble
 #  include milter_greylist
-#  class milter_greylist {
+#  class {'milter_greylist':
 #    whlcountries => ['CA'],
 #      whlips => ['8.8.8.8', '8.8.4.4'],
 #  }
 #
 # @example By default milter-greylist is configured to listen to inet socket, if you have reasons to use unix socket instead try this
 #  include milter_greylist
-#  class milter_greylist {
+#  class {'milter_greylist':
 #    socket => '/var/run/milter-greylist/milter-greylist.sock',
 #  }
 # 
 # @example If you have registered for a free MaxMind account and downloaded CSV file with ASN information you can greylist by ASN number
 #  include milter_greylist
-#  class milter_greylist {
+#  class {'milter_greylist':
 #    asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
 #    greyasns   => ['12220','15555','1333'],
 #  }

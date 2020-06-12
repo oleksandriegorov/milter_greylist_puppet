@@ -1,10 +1,12 @@
 {
   "name": "oleksandriegorov-milter_greylist",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "author": "Oleksandr Iegorov <alex.yegorov@gmail.com>",
   "summary": "Installs and configures milter-greylist - opensource solution to shrug one time spam off",
   "license": "Apache-2.0",
-  "source": "",
+  "source": "https://github.com/oleksandriegorov/milter_greylist_puppet",
+  "project_page": "https://github.com/oleksandriegorov/milter_greylist_puppet/blob/master/REFERENCE.md",
+  "issues_url": "https://github.com/oleksandriegorov/milter_greylist_puppet/issues",
   "dependencies": [
 
   ],
