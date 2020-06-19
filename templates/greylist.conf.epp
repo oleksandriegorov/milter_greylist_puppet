@@ -2,6 +2,7 @@
 
 String $geoipcountryfile    = '/usr/local/share/GeoIP/GeoIP.dat',
 String $socketpath          = 'inet:3333@127.0.0.1',
+String $dumpfile            = '/var/lib/milter-greylist/db/greylist.db',
 Array[String] $mxpeers      = [],
 Array[String] $whlcountries = ['US','CA'],
 Array[String] $whlips       = [],
@@ -24,7 +25,7 @@ String $user                = 'grmilter',
 
 #pidfile "/var/run/milter-greylist.pid"
 socket "<%= $socketpath %>"
-dumpfile "/var/lib/milter-greylist/db/greylist.db" 600
+dumpfile "<%= $dumpfile %>" 600
 geoipdb "<%= $geoipcountryfile %>"
 dumpfreq 1
 user "<%= $user %>"

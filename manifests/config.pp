@@ -3,6 +3,7 @@
 class milter_greylist::config (
   String $geoipcountryfile,
   String $socketpath,
+  String $dumpfile,
   Array[String] $mxpeers,
   Array[String] $whlcountries,
   Array[String] $whlips,
@@ -28,6 +29,7 @@ class milter_greylist::config (
       content => epp('milter_greylist/greylist.conf.epp', {
         'geoipcountryfile' => $geoipcountryfile,
         'socketpath'       => $socketpath,
+        'dumpfile'         => $dumpfile,
         'mxpeers'          => $mxpeers,
         'whlcountries'     => $whlcountries,
         'greyips'          => $greyips,

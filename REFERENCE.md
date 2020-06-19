@@ -90,6 +90,14 @@ Specifies the socket used to communicate with MTA
 
 Default value: 'inet:3333@127.0.0.1'
 
+##### `dumpfile`
+
+Data type: `String`
+
+Absolute path to greylisting db
+
+Default value: '/var/lib/milter-greylist/db/greylist.db'
+
 ##### `mxpeers`
 
 Data type: `Array[String]`
@@ -201,6 +209,12 @@ Data type: `String`
 
 
 ##### `socketpath`
+
+Data type: `String`
+
+
+
+##### `dumpfile`
 
 Data type: `String`
 

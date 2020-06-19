@@ -20,6 +20,7 @@ describe 'milter_greylist::config' do
         {
           'geoipcountryfile' => '/usr/local/share/GeoIP/GeoIP.dat',
           'socketpath'       => 'inet:3333@127.0.0.1',
+          'dumpfile'         => '/var/lib/milter-greylist/db/greylist.db',
           'mxpeers'          => ['192.168.1.10', '192.168.1.11', '192.168.1.12'],
           'whlcountries'     => ['US', 'CA'],
           'whlips'           => [],

@@ -36,6 +36,8 @@
 #  Specifies the location of GeoIP database
 # @param socketpath
 #  Specifies the socket used to communicate with MTA
+# @param dumpfile
+#  Absolute path to greylisting db 
 # @param mxpeers
 #  Provides a list for synchronization of the greylist among multiple MX
 # @param whlcountries
@@ -63,6 +65,7 @@
 class milter_greylist (
   String $geoipcountryfile    = '/usr/local/share/GeoIP/GeoIP.dat',
   String $socketpath          = 'inet:3333@127.0.0.1',
+  String $dumpfile            = '/var/lib/milter-greylist/db/greylist.db',
   Array[String] $mxpeers      = [],
   Array[String] $whlcountries = ['US','CA'],
   Array[String] $whlips       = [],
@@ -81,6 +84,7 @@ class milter_greylist (
   class { 'milter_greylist::config':
     geoipcountryfile => $geoipcountryfile,
     socketpath       => $socketpath,
+    dumpfile         => $dumpfile,
     mxpeers          => $mxpeers,
     whlcountries     => $whlcountries,
     whlips           => $whlips,

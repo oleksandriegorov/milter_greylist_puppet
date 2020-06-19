@@ -1,6 +1,6 @@
 {
   "name": "oleksandriegorov-milter_greylist",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "author": "Oleksandr Iegorov <alex.yegorov@gmail.com>",
   "summary": "Installs and configures milter-greylist - opensource solution to shrug one time spam off",
   "license": "Apache-2.0",
