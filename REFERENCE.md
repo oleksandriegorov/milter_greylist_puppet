@@ -10,6 +10,10 @@
 * [`milter_greylist::package`](#milter_greylistpackage): Installs milter-greylist package
 * [`milter_greylist::service`](#milter_greylistservice): Ensure service is running
 
+**Defined types**
+
+* [`milter_greylist::mxpeersauto`](#milter_greylistmxpeersauto): Resource is used to provide a fragment for milter greylist file with a string "peer $ipaddress"
+
 **Functions**
 
 * [`milter_greylist::asn2subnets`](#milter_greylistasn2subnets): Translates a list of ASNs into a list of subnets
@@ -105,6 +109,14 @@ Data type: `Array[String]`
 Provides a list for synchronization of the greylist among multiple MX
 
 Default value: []
+
+##### `mxpeers_tag`
+
+Data type: `Optional[String]`
+
+Allows for automated population of mxpeers list. Makes sense to use if you have enabled puppetdb.
+
+Default value: `undef`
 
 ##### `whlcountries`
 
@@ -226,6 +238,14 @@ Data type: `Array[String]`
 
 
 
+##### `mxpeers_tag`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
 ##### `whlcountries`
 
 Data type: `Array[String]`
@@ -299,6 +319,32 @@ Installs milter-greylist package
 ### milter_greylist::service
 
 Ensure service is running
+
+## Defined types
+
+### milter_greylist::mxpeersauto
+
+Resource is used to provide a fragment for milter greylist file with a string "peer $ipaddress"
+
+#### Examples
+
+##### 
+
+```puppet
+milter_greylist::mxpeersauto { '15.15.15.15': }
+```
+
+#### Parameters
+
+The following parameters are available in the `milter_greylist::mxpeersauto` defined type.
+
+##### `ipaddress`
+
+Data type: `Stdlib::IP::Address`
+
+
+
+Default value: $name
 
 ## Functions
 

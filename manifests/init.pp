@@ -40,6 +40,8 @@
 #  Absolute path to greylisting db 
 # @param mxpeers
 #  Provides a list for synchronization of the greylist among multiple MX
+# @param mxpeers_tag
+#  Allows for automated population of mxpeers list. Makes sense to use if you have enabled puppetdb.
 # @param whlcountries
 #  Provides a list of country codes you wish to exclude from a greylist
 # @param whlips
@@ -63,21 +65,22 @@
 # @param user
 # Run milter-greylist(8) as a non root user
 class milter_greylist (
-  String $geoipcountryfile    = '/usr/local/share/GeoIP/GeoIP.dat',
-  String $socketpath          = 'inet:3333@127.0.0.1',
-  String $dumpfile            = '/var/lib/milter-greylist/db/greylist.db',
-  Array[String] $mxpeers      = [],
-  Array[String] $whlcountries = ['US','CA'],
-  Array[String] $whlips       = [],
-  Array[String] $greyips      = [],
-  Array[String] $greyasns     = [],
-  String $asncsvfile          = '',
-  String $mynetworks          = '127.0.0.1/8 10.0.0.0/8',
-  String $greylistdelay       = '1h',
-  String $autowhiteperiod     = '3d',
-  String $subnetmatchv4       = '/24',
-  Boolean $spfwhitelist       = false,
-  String $user = 'grmilter',
+  String $geoipcountryfile       = '/usr/local/share/GeoIP/GeoIP.dat',
+  String $socketpath             = 'inet:3333@127.0.0.1',
+  String $dumpfile               = '/var/lib/milter-greylist/db/greylist.db',
+  Array[String] $mxpeers         = [],
+  Optional[String] $mxpeers_tag = undef,
+  Array[String] $whlcountries    = ['US','CA'],
+  Array[String] $whlips          = [],
+  Array[String] $greyips         = [],
+  Array[String] $greyasns        = [],
+  String $asncsvfile             = '',
+  String $mynetworks             = '127.0.0.1/8 10.0.0.0/8',
+  String $greylistdelay          = '1h',
+  String $autowhiteperiod        = '3d',
+  String $subnetmatchv4          = '/24',
+  Boolean $spfwhitelist          = false,
+  String $user                   = 'grmilter',
 ) {
   include 'milter_greylist::package'
   include 'milter_greylist::service'
@@ -86,6 +89,7 @@ class milter_greylist (
     socketpath       => $socketpath,
     dumpfile         => $dumpfile,
     mxpeers          => $mxpeers,
+    mxpeers_tag      => $mxpeers_tag,
     whlcountries     => $whlcountries,
     whlips           => $whlips,
     greyips          => $greyips,

@@ -5,6 +5,7 @@ class milter_greylist::config (
   String $socketpath,
   String $dumpfile,
   Array[String] $mxpeers,
+  Optional[String] $mxpeers_tag = undef,
   Array[String] $whlcountries,
   Array[String] $whlips,
   Array[String] $greyips,
@@ -24,22 +25,87 @@ class milter_greylist::config (
     $emulation_greyasns = []
   }
 
-  file {'/etc/mail/greylist.conf':
-      ensure  => present,
-      content => epp('milter_greylist/greylist.conf.epp', {
+  if $mxpeers_tag {
+    @@milter_greylist::mxpeersauto { $facts['ipaddress']:
+      tag => $mxpeers_tag,
+    }
+
+    $target = '/etc/mail/greylist.conf'
+    concat { $target:
+      owner          => 'root',
+      group          => 'root',
+      mode           => '0644',
+      ensure_newline => true,
+      order          => 'numeric',
+    }
+
+    concat::fragment { 'pre_peer_part':
+      target  => $target,
+      content => epp('milter_greylist/pre_peers_greylist.conf.epp', {
         'geoipcountryfile' => $geoipcountryfile,
         'socketpath'       => $socketpath,
         'dumpfile'         => $dumpfile,
-        'mxpeers'          => $mxpeers,
-        'whlcountries'     => $whlcountries,
-        'greyips'          => $greyips,
-        'greyasns'         => $emulation_greyasns,
-        'mynetworks'       => $mynetworks,
         'greylistdelay'    => $greylistdelay,
         'autowhiteperiod'  => $autowhiteperiod,
         'subnetmatchv4'    => $subnetmatchv4,
         'spfwhitelist'     => $spfwhitelist,
         'user'             => $user,
       }),
+      order   => 1,
     }
+
+    Profile::Exportresources::Clusterstype <<| tag == $mxpeers_tag |>>
+
+    concat::fragment { 'post_peer_part':
+      target  => $target,
+      content => epp('milter_greylist/pre_peers_greylist.conf.epp', {
+        'whlcountries'  => $whlcountries,
+        'greyips'       => $greyips,
+        'greyasns'      => $emulation_greyasns,
+        'mynetworks'    => $mynetworks,
+        'greylistdelay' => $greylistdelay,
+      }),
+      order   => 10000,
+    }
+
+    file {'/etc/mail/greylist.conf':
+        ensure  => present,
+        content => epp('milter_greylist/greylist.conf.epp', {
+          'geoipcountryfile' => $geoipcountryfile,
+          'socketpath'       => $socketpath,
+          'dumpfile'         => $dumpfile,
+          'whlcountries'     => $whlcountries,
+          'greyips'          => $greyips,
+          'greyasns'         => $emulation_greyasns,
+          'mynetworks'       => $mynetworks,
+          'greylistdelay'    => $greylistdelay,
+          'autowhiteperiod'  => $autowhiteperiod,
+          'subnetmatchv4'    => $subnetmatchv4,
+          'spfwhitelist'     => $spfwhitelist,
+          'user'             => $user,
+        }),
+      }
+
+  }
+  else {
+
+    file {'/etc/mail/greylist.conf':
+        ensure  => present,
+        content => epp('milter_greylist/greylist.conf.epp', {
+          'geoipcountryfile' => $geoipcountryfile,
+          'socketpath'       => $socketpath,
+          'dumpfile'         => $dumpfile,
+          'mxpeers'          => $mxpeers,
+          'whlcountries'     => $whlcountries,
+          'greyips'          => $greyips,
+          'greyasns'         => $emulation_greyasns,
+          'mynetworks'       => $mynetworks,
+          'greylistdelay'    => $greylistdelay,
+          'autowhiteperiod'  => $autowhiteperiod,
+          'subnetmatchv4'    => $subnetmatchv4,
+          'spfwhitelist'     => $spfwhitelist,
+          'user'             => $user,
+        }),
+      }
+  }
 }
