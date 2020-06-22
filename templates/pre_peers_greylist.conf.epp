@@ -1,0 +1,67 @@
+<% |
+
+String $geoipcountryfile    = '/usr/local/share/GeoIP/GeoIP.dat',
+String $socketpath          = 'inet:3333@127.0.0.1',
+String $dumpfile            = '/var/lib/milter-greylist/db/greylist.db',
+String $greylistdelay       = '1h',
+String $autowhiteperiod     = '3d',
+String $subnetmatchv4       = '/24',
+Boolean $spfwhitelist       = false,
+String $user                = 'grmilter',
+
+| -%>
+#
+# Simple greylisting config file using the new features
+# See greylist2.conf for a more detailed list of available options
+#
+# $Id: greylist.conf,v 1.50 2013/08/13 12:45:08 manu Exp $
+#
+
+#pidfile "/var/run/milter-greylist.pid"
+socket "<%= $socketpath %>"
+dumpfile "<%= $dumpfile %>" 600
+geoipdb "<%= $geoipcountryfile %>"
+dumpfreq 1
+user "<%= $user %>"
+localaddr <%= $facts['networking']['interfaces']['eth0']['ip'] %>
+syncaddr <%= $facts['networking']['interfaces']['eth0']['ip'] %>
+
+# How long a client has to wait before we accept
+# the messages it retries to send. Here, 1 hour.
+# May be overridden by the "-w greylist_delay" command line argument.
+greylist <%= $greylistdelay %>
+
+# How long does auto-whitelisting last (set it to 0
+# to disable auto-whitelisting). Here, 3 days.
+# May be overridden by the "-a autowhite_delay" command line argument.
+autowhite <%= $autowhiteperiod %>
+
+# Specify the netmask to be used when checking IPv4 addresses
+# in the greylist.
+# May be overridden by the "-L cidrmask" command line argument.
+subnetmatch <%= $subnetmatchv4 %>
+
+# If milter-greylist was built with SPF support, then
+# SPF-compliant senders are not greylisted. Uncomment
+# this to greylist them regardless of SPF compliance.
+# May be overridden by the "-S" command line argument.
+<% if $spfwhitelist { -%>
+#nospf
+<% } else { -%>
+nospf
+<% } -%>
+
+# Log milter-greylist activity to a file
+#stat ">>/var/milter-greylist/greylist.log" \
+#      "%T{%Y/%m/%d %T} %d [%i] %f -> %r %S (ACL %A) %Xc %Xe %Xm %Xh\n"
+# Same, sent to syslog
+stat "|logger -p mail.info" \
+      "%T{%Y/%m/%d %T} %d [%i] %f -> %r %S (ACL %A) %Xc %Xe %Xm %Xh"
+
+# Be verbose (or use -v flag)
+#verbose
+
+# Do not tell spammer how long they have to wait
+quiet
+
+# MX peering
