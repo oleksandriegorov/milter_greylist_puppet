@@ -5,7 +5,6 @@ class milter_greylist::config (
   String $socketpath,
   String $dumpfile,
   Array[String] $mxpeers,
-  Optional[String] $mxpeers_tag = undef,
   Array[String] $whlcountries,
   Array[String] $whlips,
   Array[String] $greyips,
@@ -17,6 +16,7 @@ class milter_greylist::config (
   String $subnetmatchv4,
   Boolean $spfwhitelist,
   String $user,
+  Optional[String] $mxpeers_tag = undef,
 ){
   if $greyasns != [] {
     $emulation_greyasns = milter_greylist::asn2subnets($greyasns,$asncsvfile)
@@ -54,37 +54,19 @@ class milter_greylist::config (
       order   => 1,
     }
 
-    Profile::Exportresources::Clusterstype <<| tag == $mxpeers_tag |>>
+    Milter_greylist::Mxpeersauto <<| tag == $mxpeers_tag |>>
 
     concat::fragment { 'post_peer_part':
       target  => $target,
-      content => epp('milter_greylist/pre_peers_greylist.conf.epp', {
-        'whlcountries'  => $whlcountries,
-        'greyips'       => $greyips,
-        'greyasns'      => $emulation_greyasns,
-        'mynetworks'    => $mynetworks,
-        'greylistdelay' => $greylistdelay,
+      content => epp('milter_greylist/post_peers_greylist.conf.epp', {
+        'whlcountries' => $whlcountries,
+        'whlips'       => $whlips,
+        'greyips'      => $greyips,
+        'greyasns'     => $emulation_greyasns,
+        'mynetworks'   => $mynetworks,
       }),
       order   => 10000,
     }
-
-    file {'/etc/mail/greylist.conf':
-        ensure  => present,
-        content => epp('milter_greylist/greylist.conf.epp', {
-          'geoipcountryfile' => $geoipcountryfile,
-          'socketpath'       => $socketpath,
-          'dumpfile'         => $dumpfile,
-          'whlcountries'     => $whlcountries,
-          'greyips'          => $greyips,
-          'greyasns'         => $emulation_greyasns,
-          'mynetworks'       => $mynetworks,
-          'greylistdelay'    => $greylistdelay,
-          'autowhiteperiod'  => $autowhiteperiod,
-          'subnetmatchv4'    => $subnetmatchv4,
-          'spfwhitelist'     => $spfwhitelist,
-          'user'             => $user,
-        }),
-      }
 
   }
   else {
@@ -97,6 +79,7 @@ class milter_greylist::config (
           'dumpfile'         => $dumpfile,
           'mxpeers'          => $mxpeers,
           'whlcountries'     => $whlcountries,
+          'whlips'           => $whlips,
           'greyips'          => $greyips,
           'greyasns'         => $emulation_greyasns,
           'mynetworks'       => $mynetworks,

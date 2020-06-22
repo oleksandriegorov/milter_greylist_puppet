@@ -69,7 +69,7 @@ class milter_greylist (
   String $socketpath             = 'inet:3333@127.0.0.1',
   String $dumpfile               = '/var/lib/milter-greylist/db/greylist.db',
   Array[String] $mxpeers         = [],
-  Optional[String] $mxpeers_tag = undef,
+  Optional[String] $mxpeers_tag  = undef,
   Array[String] $whlcountries    = ['US','CA'],
   Array[String] $whlips          = [],
   Array[String] $greyips         = [],
@@ -82,6 +82,7 @@ class milter_greylist (
   Boolean $spfwhitelist          = false,
   String $user                   = 'grmilter',
 ) {
+  include ::stdlib
   include 'milter_greylist::package'
   include 'milter_greylist::service'
   class { 'milter_greylist::config':
