@@ -16,6 +16,8 @@ class milter_greylist::config (
   String $subnetmatchv4,
   Boolean $spfwhitelist,
   String $user,
+  Integer $default_ratelimit = 0,
+  String $default_ratewindow = '1m',
   Optional[String] $mxpeers_tag = undef,
 ){
   if $greyasns != [] {
@@ -59,11 +61,14 @@ class milter_greylist::config (
     concat::fragment { 'post_peer_part':
       target  => $target,
       content => epp('milter_greylist/post_peers_greylist.conf.epp', {
-        'whlcountries' => $whlcountries,
-        'whlips'       => $whlips,
-        'greyips'      => $greyips,
-        'greyasns'     => $emulation_greyasns,
-        'mynetworks'   => $mynetworks,
+        'whlcountries'       => $whlcountries,
+        'whlips'             => $whlips,
+        'greyips'            => $greyips,
+        'greyasns'           => $emulation_greyasns,
+        'mynetworks'         => $mynetworks,
+        'default_ratelimit'  => $default_ratelimit,
+        'default_ratewindow' => $default_ratewindow,
+
       }),
       order   => 10000,
     }
@@ -74,20 +79,22 @@ class milter_greylist::config (
     file {'/etc/mail/greylist.conf':
         ensure  => present,
         content => epp('milter_greylist/greylist.conf.epp', {
-          'geoipcountryfile' => $geoipcountryfile,
-          'socketpath'       => $socketpath,
-          'dumpfile'         => $dumpfile,
-          'mxpeers'          => $mxpeers,
-          'whlcountries'     => $whlcountries,
-          'whlips'           => $whlips,
-          'greyips'          => $greyips,
-          'greyasns'         => $emulation_greyasns,
-          'mynetworks'       => $mynetworks,
-          'greylistdelay'    => $greylistdelay,
-          'autowhiteperiod'  => $autowhiteperiod,
-          'subnetmatchv4'    => $subnetmatchv4,
-          'spfwhitelist'     => $spfwhitelist,
-          'user'             => $user,
+          'geoipcountryfile'   => $geoipcountryfile,
+          'socketpath'         => $socketpath,
+          'dumpfile'           => $dumpfile,
+          'mxpeers'            => $mxpeers,
+          'whlcountries'       => $whlcountries,
+          'whlips'             => $whlips,
+          'greyips'            => $greyips,
+          'greyasns'           => $emulation_greyasns,
+          'mynetworks'         => $mynetworks,
+          'greylistdelay'      => $greylistdelay,
+          'autowhiteperiod'    => $autowhiteperiod,
+          'subnetmatchv4'      => $subnetmatchv4,
+          'spfwhitelist'       => $spfwhitelist,
+          'user'               => $user,
+          'default_ratelimit'  => $default_ratelimit,
+          'default_ratewindow' => $default_ratewindow,
         }),
       }
   }

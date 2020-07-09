@@ -14,7 +14,8 @@ String $autowhiteperiod     = '3d',
 String $subnetmatchv4       = '/24',
 Boolean $spfwhitelist       = false,
 String $user                = 'grmilter',
-
+Integer $default_ratelimit  = 0,
+String  $default_ratewindow = '1m',
 | -%>
 #
 # Simple greylisting config file using the new features
@@ -214,6 +215,10 @@ racl continue from /.*/ addheader "X-Greylist: inspected by %V for IP:'%i' DOMAI
 
 # And here is the access list
 racl whitelist default
+<% if $default_ratelimit > 0 { -%>
+ratelimit "Default" rcpt <%= $default_ratelimit %> / <%= $default_ratewindow %> key "%i"
+dacl blacklist ratelimit "Default" msg "Temporary failure D1 for [ %i ] : [ %f ]. Try again later"
+<% } -%>
 dacl whitelist list "my network"
 dacl whitelist list "broken mta"
 <% unless empty($whlips) { -%>

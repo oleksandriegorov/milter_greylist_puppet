@@ -18,21 +18,22 @@ describe 'milter_greylist::config' do
       let(:facts) { os_facts.merge(default_facts) }
       let(:params) do
         {
-          'geoipcountryfile' => '/usr/local/share/GeoIP/GeoIP.dat',
-          'socketpath'       => 'inet:3333@127.0.0.1',
-          'dumpfile'         => '/var/lib/milter-greylist/db/greylist.db',
-          'mxpeers'          => ['192.168.1.10', '192.168.1.11', '192.168.1.12'],
-          'whlcountries'     => ['US', 'CA'],
-          'whlips'           => [],
-          'greyips'          => ['15.15.15.15', '14.13.12.11'],
-          'greyasns'         => ['12200', '36248'],
-          'asncsvfile'       => asncsvfile,
-          'mynetworks'       => '127.0.0.1/8 10.0.0.0/8',
-          'greylistdelay'    => '1h',
-          'autowhiteperiod'  => '3d',
-          'subnetmatchv4'    => '/24',
-          'spfwhitelist'     => false,
-          'user'             => 'grmilter',
+          'geoipcountryfile'  => '/usr/local/share/GeoIP/GeoIP.dat',
+          'socketpath'        => 'inet:3333@127.0.0.1',
+          'dumpfile'          => '/var/lib/milter-greylist/db/greylist.db',
+          'mxpeers'           => ['192.168.1.10', '192.168.1.11', '192.168.1.12'],
+          'whlcountries'      => ['US', 'CA'],
+          'whlips'            => [],
+          'greyips'           => ['15.15.15.15', '14.13.12.11'],
+          'greyasns'          => ['12200', '36248'],
+          'asncsvfile'        => asncsvfile,
+          'mynetworks'        => '127.0.0.1/8 10.0.0.0/8',
+          'greylistdelay'     => '1h',
+          'autowhiteperiod'   => '3d',
+          'subnetmatchv4'     => '/24',
+          'spfwhitelist'      => false,
+          'user'              => 'grmilter',
+          'default_ratelimit' => 5,
         }
       end
 
@@ -41,6 +42,7 @@ describe 'milter_greylist::config' do
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^peer 192.168.1.10}) }
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^peer 192.168.1.11}) }
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^peer 192.168.1.12}) }
+      it { is_expected.to contain_file(greylistconfig).with_content(%r{^dacl blacklist ratelimit "Default"}) }
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^list \"whitelisted_countries\" geoip \{ \\\n  \"US\" \\\n  \"CA\" \\\n\}}) }
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^list \"greylisted_ips\" addr \{ \\\n  15.15.15.15 \\\n  14.13.12.11 \\\n\}}) }
       it { is_expected.to contain_file(greylistconfig).with_content(%r{^list \"greylisted_asn_subnets\" addr \{ \\\n  146.177.20.0/23 \\\n  166.86.4.0/22 \\\n  208.95.156.0/22 \\\n\}}) }
@@ -80,6 +82,7 @@ describe 'milter_greylist::config' do
       it { is_expected.to contain_concat__fragment(post_peer_part).with_content(%r{^list \"whitelisted_countries\" geoip \{ \\\n  \"US\" \\\n  \"CA\" \\\n\}}) }
       it { is_expected.to contain_concat__fragment(post_peer_part).with_content(%r{^list \"greylisted_ips\" addr \{ \\\n  15.15.15.15 \\\n  14.13.12.11 \\\n\}}) }
       it { is_expected.to contain_concat__fragment(post_peer_part).with_content(%r{^list \"greylisted_asn_subnets\" addr \{ \\\n  146.177.20.0/23 \\\n  166.86.4.0/22 \\\n  208.95.156.0/22 \\\n\}}) }
+      it { is_expected.not_to contain_concat__fragment(pre_peer_part).with_content(%r{^dacl blacklist ratelimit "Default"}) }
     end
   end
 end

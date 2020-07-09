@@ -5,6 +5,8 @@ Array[String] $whlips       = [],
 Array[String] $greyips      = [],
 Array[String] $greyasns     = [],
 String $mynetworks          = "127.0.0.1/8 10.0.0.0/8",
+Integer $default_ratelimit  = 0,
+String  $default_ratewindow = '1m',
 
 | -%>
 # Your own network, which should not suffer greylisting
@@ -142,6 +144,10 @@ racl continue from /.*/ addheader "X-Greylist: inspected by %V for IP:'%i' DOMAI
 
 # And here is the access list
 racl whitelist default
+<% if $default_ratelimit > 0 { -%>
+ratelimit "Default" rcpt <%= $default_ratelimit %> / <%= $default_ratewindow %> key "%i"
+dacl blacklist ratelimit "Default" msg "Temporary failure D1 for [ %i ] : [ %f ]. Try again later"
+<% } -%>
 dacl whitelist list "my network"
 dacl whitelist list "broken mta"
 <% unless empty($whlips) { -%>

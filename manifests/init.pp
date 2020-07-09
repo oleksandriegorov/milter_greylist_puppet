@@ -64,6 +64,10 @@
 #  Whitelist clients if they are SPF-compliant
 # @param user
 # Run milter-greylist(8) as a non root user
+# @default_ratelimit
+# Number of messages per default_ratewindow to allow by default. Defaults to 0, which disables any logic of a rate limit
+# @default_ratewindow
+# Specifier of a rate time window for default rate limit to act. Defaults to '1m'
 class milter_greylist (
   String $geoipcountryfile       = '/usr/local/share/GeoIP/GeoIP.dat',
   String $socketpath             = 'inet:3333@127.0.0.1',
@@ -81,27 +85,31 @@ class milter_greylist (
   String $subnetmatchv4          = '/24',
   Boolean $spfwhitelist          = false,
   String $user                   = 'grmilter',
+  Integer $default_ratelimit     = 0,
+  String $default_ratewindow     = '1m',
 ) {
   include ::stdlib
   include 'milter_greylist::package'
   include 'milter_greylist::service'
   class { 'milter_greylist::config':
-    geoipcountryfile => $geoipcountryfile,
-    socketpath       => $socketpath,
-    dumpfile         => $dumpfile,
-    mxpeers          => $mxpeers,
-    mxpeers_tag      => $mxpeers_tag,
-    whlcountries     => $whlcountries,
-    whlips           => $whlips,
-    greyips          => $greyips,
-    greyasns         => $greyasns,
-    asncsvfile       => $asncsvfile,
-    mynetworks       => $mynetworks,
-    greylistdelay    => $greylistdelay,
-    autowhiteperiod  => $autowhiteperiod,
-    subnetmatchv4    => $subnetmatchv4,
-    spfwhitelist     => $spfwhitelist,
-    user             => $user,
+    geoipcountryfile   => $geoipcountryfile,
+    socketpath         => $socketpath,
+    dumpfile           => $dumpfile,
+    mxpeers            => $mxpeers,
+    mxpeers_tag        => $mxpeers_tag,
+    whlcountries       => $whlcountries,
+    whlips             => $whlips,
+    greyips            => $greyips,
+    greyasns           => $greyasns,
+    asncsvfile         => $asncsvfile,
+    mynetworks         => $mynetworks,
+    greylistdelay      => $greylistdelay,
+    autowhiteperiod    => $autowhiteperiod,
+    subnetmatchv4      => $subnetmatchv4,
+    spfwhitelist       => $spfwhitelist,
+    user               => $user,
+    default_ratelimit  => $default_ratelimit,
+    default_ratewindow => $default_ratewindow,
   }
   Class['milter_greylist::package']->Class['milter_greylist::config']~>Class['milter_greylist::service']
 }
