@@ -1,8 +1,11 @@
 # @summary Ensure service is running
 #
-class milter_greylist::service {
+class milter_greylist::service (
+  String $service_ensure,
+  Boolean $service_enable,
+){
   service { 'milter-greylist':
-      ensure => running,
-      enable => true,
+      ensure => $service_ensure,
+      enable => $service_enable,
     }
 }

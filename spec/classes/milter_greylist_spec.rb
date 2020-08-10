@@ -14,6 +14,18 @@ describe 'milter_greylist' do
     context "on #{os}" do
       let(:facts) { os_facts.merge(default_facts) }
 
+      it { is_expected.to contain_class('milter_greylist::package').that_comes_before('Class[milter_greylist::config]') }
+      it { is_expected.to compile }
+    end
+    context "on #{os} - if package is to be  absent" do
+      let(:facts) { os_facts.merge(default_facts) }
+      let(:params) do
+        {
+          'package_ensure' => 'absent',
+        }
+      end
+
+      it { is_expected.to contain_class('milter_greylist::service').that_comes_before('Class[milter_greylist::package]') }
       it { is_expected.to compile }
     end
   end

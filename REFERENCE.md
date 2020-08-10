@@ -26,7 +26,12 @@ milter_greylist
 Main class for installation, configuration and enabling milter-greylist as a service
 milter-greylist itself is open source : http://hcpnet.free.fr/milter-greylist and helps a lot in dealing with spam
 
+Controls whether to have service running at the moment
+Controls whether to have a service enabled at boot and at all times
+Controls where to have a package installed or not.
 Run milter-greylist(8) as a non root user
+Number of messages per default_ratewindow to allow by default. Defaults to 0, which disables any logic of a rate limit
+Specifier of a rate time window for default rate limit to act. Defaults to '1m'
 
 #### Examples
 
@@ -77,6 +82,30 @@ class {'milter_greylist':
 #### Parameters
 
 The following parameters are available in the `milter_greylist` class.
+
+##### `service_ensure`
+
+Data type: `String`
+
+
+
+Default value: 'running'
+
+##### `service_enable`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### `package_ensure`
+
+Data type: `String`
+
+
+
+Default value: 'present'
 
 ##### `geoipcountryfile`
 
@@ -206,6 +235,22 @@ Data type: `String`
 
 Default value: 'grmilter'
 
+##### `default_ratelimit`
+
+Data type: `Integer`
+
+
+
+Default value: 0
+
+##### `default_ratewindow`
+
+Data type: `String`
+
+
+
+Default value: '1m'
+
 ### milter_greylist::config
 
 Configure milter-greylist
@@ -237,14 +282,6 @@ Data type: `String`
 Data type: `Array[String]`
 
 
-
-##### `mxpeers_tag`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
 
 ##### `whlcountries`
 
@@ -312,13 +349,63 @@ Data type: `String`
 
 
 
+##### `default_ratelimit`
+
+Data type: `Integer`
+
+
+
+Default value: 0
+
+##### `default_ratewindow`
+
+Data type: `String`
+
+
+
+Default value: '1m'
+
+##### `mxpeers_tag`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
 ### milter_greylist::package
 
 Installs milter-greylist package
 
+#### Parameters
+
+The following parameters are available in the `milter_greylist::package` class.
+
+##### `package_ensure`
+
+Data type: `String`
+
+
+
 ### milter_greylist::service
 
 Ensure service is running
+
+#### Parameters
+
+The following parameters are available in the `milter_greylist::service` class.
+
+##### `service_ensure`
+
+Data type: `String`
+
+
+
+##### `service_enable`
+
+Data type: `Boolean`
+
+
 
 ## Defined types
 

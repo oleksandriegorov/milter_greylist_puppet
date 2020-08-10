@@ -31,7 +31,12 @@
 #    asncsvfile => '/usr/local/share/geoip/GeoLite2-ASN-Blocks-IPv4.csv',
 #    greyasns   => ['12220','15555','1333'],
 #  }
-#
+# @param service_ensure
+# Controls whether to have service running at the moment
+# @param service_enable
+# Controls whether to have a service enabled at boot and at all times
+# @param package_ensure
+# Controls where to have a package installed or not.
 # @param geoipcountryfile
 #  Specifies the location of GeoIP database
 # @param socketpath
@@ -69,6 +74,9 @@
 # @default_ratewindow
 # Specifier of a rate time window for default rate limit to act. Defaults to '1m'
 class milter_greylist (
+  String $service_ensure         = 'running',
+  Boolean $service_enable        = true,
+  String $package_ensure         = 'present',
   String $geoipcountryfile       = '/usr/local/share/GeoIP/GeoIP.dat',
   String $socketpath             = 'inet:3333@127.0.0.1',
   String $dumpfile               = '/var/lib/milter-greylist/db/greylist.db',
@@ -89,8 +97,13 @@ class milter_greylist (
   String $default_ratewindow     = '1m',
 ) {
   include ::stdlib
-  include 'milter_greylist::package'
-  include 'milter_greylist::service'
+  class { 'milter_greylist::package':
+    package_ensure => $package_ensure,
+  }
+  class { 'milter_greylist::service':
+    service_ensure => $service_ensure,
+    service_enable => $service_enable,
+  }
   class { 'milter_greylist::config':
     geoipcountryfile   => $geoipcountryfile,
     socketpath         => $socketpath,
@@ -111,5 +124,10 @@ class milter_greylist (
     default_ratelimit  => $default_ratelimit,
     default_ratewindow => $default_ratewindow,
   }
-  Class['milter_greylist::package']->Class['milter_greylist::config']~>Class['milter_greylist::service']
+  if $package_ensure == 'absent' {
+    Class['milter_greylist::service']->Class['milter_greylist::package']
+  }
+  else {
+    Class['milter_greylist::package']->Class['milter_greylist::config']~>Class['milter_greylist::service']
+  }
 }
